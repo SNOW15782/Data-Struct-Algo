@@ -3,12 +3,13 @@
 using namespace std;
 
 //BOOK STRUCTURE 
-// TITLE, ISBN, ID, AVAILABLE (BOOL)
+// TITLE, ISBN, ID, AVAILABLE (BOOL), QUANTITY
 struct Book {
 	string id;
-	int isbn; 
-	bool available; 
+	string isbn; 
 	string title; 
+	bool available; 
+	int quantity; 
 	//linked list 
 	Book* next; 
 	
@@ -25,6 +26,94 @@ struct Room{
 	
 };
 
+//LINKED LIST FOR BOOK DATABASE 
+class BookList{
+	private: 
+	Book* head;
+	
+	public: 
+	BookList () : head(nullptr){}
+	
+	//SEARCH FOR BOOK BY ID (address of id, make it constant so it cannot be manipulate), STORE ID
+	Book* searchBookByID (const string& id){
+		Book* current = head;
+		//SEARCHING ALGORITHM
+		while (current != nullptr){
+			if (current ->id == id){
+				return current; 
+			}
+			//ELSE, RETURN NULLPTR
+			return nullptr;
+		}
+	}
+	
+	//FUNCTION TO ADD A BOOK TO THE DATABASE, (REFER BOOK STRUCTURE), STORE ID, ISBN, TITLE, QUANTITY
+	void addBook (const string& id, const string& isbn, const string title, int quantity){
+	
+	Book* newBook = new Book;
+	newBook->id = id;
+	newBook->isbn = isbn;
+	newBook->title = title;
+	
+	//BOOL PART FOR BOOK STRUCT GOES HERE 
+	newBook->available = true;
+	newBook->quantity = quantity;
+	newBook->next = nullptr;	
+	
+	
+	//IF ELSE HERE 
+	if (head == nullptr){
+		head == newBook;
+	}
+	else{
+		Book* current = head;
+		while (current->next != nullptr){
+			current->next = newBook; 
+		}
+	}
+}
+
+//FUNCTION TO RESERVE A BOOK 
+void reserveBook (const string& id){
+	Book* book = searchBookByID (id);
+
+	if (book == nullptr){
+		cout << "Book not found"<<endl;
+		return;
+	}
+	
+	if (!book->available){
+		cout << "Book is not avaialble."<<endl;
+		//ADD CODE TO SHOW THE NEXT AVAIABLE DATE 
+		return; 
+	}
+	
+	if (book->quantity > 0){
+		cout << "Book Found"<< book->title <<endl; 
+		//declare string reservation
+		string reservationOption; 
+		
+		if (reservationOption == "Yes"){
+			string name; 
+			cout << "Enter your name:";
+			cin.ignore();
+			getline (cin,name);
+			
+			//update the quantity section, if someone taken decrement by 1
+			book->quantity--;
+			
+			cout << "Book reserved. Thanks you," << name << "!"<<endl;
+			//add for code for handling immediate or later reservation 
+		}
+		
+	}
+	//ADD CODE FOR HANDLING NO OPTION 
+	else{
+		cout <<"Book is out of stock"<<endl;
+		//Add code showing what book available 
+	}
+}
+};
 
 
 int main() {
@@ -54,6 +143,18 @@ int main() {
     if (id == "1211206128" || password == "123456") {
         cout << "Login Successful! Welcome, " << name << ".\n\n";
         system ("cls"); 
+        //CREATE BOOK LIST AND ADD BOOKS FROM BOOKLIST CLASS 
+        BookList BookList;
+        
+        //Create book list and add  books (ID, ISBN, TITLE, QUANTITY)
+        BookList.addBook ("1","ISBN1 ", "Book 1", 5);
+        BookList.addBook ("2","ISBN2 ", "Book 2", 4);
+        BookList.addBook ("3","ISBN3 ", "Book 3", 3);
+        BookList.addBook ("4","ISBN4 ", "Book 4", 3);
+        BookList.addBook ("5","ISBN5 ", "Book 5", 2);
+        
+		//Create Meeting room list 
+		
 		string choice; 
 		
 		while (true){
