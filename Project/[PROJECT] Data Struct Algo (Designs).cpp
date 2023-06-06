@@ -4,6 +4,7 @@
 #include <algorithm>
 using namespace std;
 
+// BOOK STRUCTURE
 struct Book {
     string id;
     string isbn;
@@ -12,6 +13,7 @@ struct Book {
     int quantity;
     Book* next;
 };
+
 // ROOM STRUCTURE
 struct Room {
     string name;
@@ -20,6 +22,7 @@ struct Room {
     Room* next;
 };
 
+// BOOK CLASS
 class BookList {
 private:
     Book* head;
@@ -39,39 +42,18 @@ public:
     }
 
     Book* searchBookByTitle(const string& title) {
-        Book* start = head;
-        Book* end = nullptr;
-
-        while (start != end) {
-            Book* mid = start;
-            int count = 0;
-
-            while (mid != end) {
-                mid = mid->next;
-                count++;
-            }
-
-            mid = start;
-            for (int i = 0; i < count / 2; i++) {
-                mid = mid->next;
-            }
-
-            string storedTitle = mid->title;
+        Book* current = head;
+        while (current != nullptr) {
+            string storedTitle = current->title;
             transform(storedTitle.begin(), storedTitle.end(), storedTitle.begin(), ::tolower);
             string searchTitle = title;
             transform(searchTitle.begin(), searchTitle.end(), searchTitle.begin(), ::tolower);
 
             if (storedTitle == searchTitle) {
-                return mid;
+                return current;
             }
-            else if (storedTitle < searchTitle) {
-                start = mid->next;
-            }
-            else {
-                end = mid;
-            }
+            current = current->next;
         }
-
         return nullptr;
     }
 
@@ -107,7 +89,7 @@ public:
         return nullptr;
     }
 
-    void addBook(const string& id, const string& isbn, const string title, int quantity) {
+    void addBook(const string& id, const string& isbn, const string& title, int quantity) {
         Book* newBook = new Book;
         newBook->id = id;
         newBook->isbn = isbn;
@@ -144,6 +126,32 @@ public:
         }
     }
 
+    void deleteBook(const string& id) {
+        Book* current = head;
+        Book* previous = nullptr;
+
+        while (current != nullptr) {
+            if (current->id == id) {
+                if (previous == nullptr) {
+                    // Deleting the head node
+                    head = current->next;
+                }
+                else {
+                    previous->next = current->next;
+                }
+
+                delete current;
+                cout << "    Book deleted successfully.\n";
+                return;
+            }
+
+            previous = current;
+            current = current->next;
+        }
+
+        cout << "    Book not found.\n";
+    }
+
     void displayAvailableBooks() {
         Book* current = head;
         while (current != nullptr) {
@@ -158,7 +166,8 @@ public:
         }
     }
 };
-// MEETING ROOM DATABASE
+
+// MEETING ROOM CLASS
 class MeetingRoomList {
 private:
     Room* head;
@@ -166,7 +175,6 @@ private:
 public:
     MeetingRoomList() : head(nullptr) {}
 
-    // SEARCH FOR A ROOM BY NAME
     Room* searchRoomByName(const string& name) {
         Room* current = head;
         while (current != nullptr) {
@@ -178,7 +186,6 @@ public:
         return nullptr;
     }
 
-    // ADD A ROOM TO THE DATABASE
     void addRoom(const string& name, bool available, int capacity) {
         Room* newRoom = new Room;
         newRoom->name = name;
@@ -188,7 +195,8 @@ public:
 
         if (head == nullptr) {
             head = newRoom;
-        } else {
+        }
+        else {
             Room* current = head;
             while (current->next != nullptr) {
                 current = current->next;
@@ -198,17 +206,16 @@ public:
     }
 };
 
-
 int main() {
     string name, id, password;
 
     // LOGIN PAGE
-    cout<<" <--------------------------->"<<endl;
-    cout<<"    Welcome to MMU Library!   "<<endl;
-    cout<<" <--------------------------->"<<endl;
-    cout<<"\n         Login Page         "<<endl;
-    cout<<" <--------------------------->"<<endl;
-    cout<<"   Enter your name: ";
+    cout << " <--------------------------->" << endl;
+    cout << "    Welcome to MMU Library!   " << endl;
+    cout << " <--------------------------->" << endl;
+    cout << "\n         Login Page         " << endl;
+    cout << " <--------------------------->" << endl;
+    cout << "   Enter your name: ";
     getline(cin, name);
 
     while (true) {
@@ -218,7 +225,8 @@ int main() {
         // Check if ID is equal to 10 characters
         if (id.length() == 4) {
             break;
-        } else {
+        }
+        else {
             cout << "   Invalid ID! Please make sure you enter the correct ID.\n";
         }
     }
@@ -228,45 +236,49 @@ int main() {
 
     // Check both ID and password
     if (id == "1211" && password == "123") {
-    	cout << "\n  Login Successful! Welcome, " <<name<<endl;
-        
+        cout << "\n  Login Successful! Welcome, " << name << endl;
+
         // Create a book list and add books to the database
         BookList bookList;
         bookList.addBook("1", "9780132350884", "Clean Code: A Handbook of Agile Software Craftsmanship", 5);
         bookList.addBook("2", "9780137081073", "Effective Modern C++: 42 Specific Ways to Improve Your Use of C++11 and C++14", 3);
         bookList.addBook("3", "9780134685991", "Cracking the Coding Interview: 189 Programming Questions and Solutions", 2);
+        bookList.addBook("4", "9780135787791", "Data Structure and Algorithm Fundamentals", 10);
+        bookList.addBook("5", "9780138534431", "C++ Fundamentals", 4);
 
-         // CREATE MEETING ROOM LIST
+
+        // CREATE MEETING ROOM LIST
         MeetingRoomList roomList;
-        roomList.addRoom("Azure", true,3);
-        roomList.addRoom("Diamond", true,2);
-        roomList.addRoom("Sapphire", true,1);
+        roomList.addRoom("Azure", true, 3);
+        roomList.addRoom("Diamond", true, 2);
+        roomList.addRoom("Sapphire", true, 1);
 
         string choice;
 
         while (true) {
-            cout <<"\n   What would you like to do?"<<endl;
-            cout<<" <--------------------------->"<<endl;
-            cout << "   No.        Category      "<<endl;
-            cout<<" <--------------------------->"<<endl;
+            cout << "\n   What would you like to do?" << endl;
+            cout << " <--------------------------->" << endl;
+            cout << "   No.        Category      " << endl;
+            cout << " <--------------------------->" << endl;
             cout << "   1.    Rent a Meeting Room\n";
             cout << "   2.    Rent a Book\n";
-            cout << "   3.    Quit\n";
+            cout << "   3.    Delete a Book\n";
+            cout << "   4.    Quit\n";
             cout << "\n   Enter your choice: ";
             cin >> choice;
             system("cls");
 
             if (choice == "1") {
-                 // FUNCTION TO BOOK A ROOM
+                // FUNCTION TO BOOK A ROOM
                 string roomName;
-                cout<<"\n       List of the room     "<<endl;
-                cout<<" <--------------------------->"<<endl;
-            	cout<<"      No.      Room Name      "<<endl;
-            	cout<<" <--------------------------->"<<endl;
-                cout<<"      1.       Azure          "<<endl;
-                cout<<"      2.       Diamond        "<<endl;
-                cout<<"      3.       Sapphire       "<<endl;
-        
+                cout << "\n       List of the room     " << endl;
+                cout << " <--------------------------->" << endl;
+                cout << "      No.      Room Name      " << endl;
+                cout << " <--------------------------->" << endl;
+                cout << "      1.       Azure          " << endl;
+                cout << "      2.       Diamond        " << endl;
+                cout << "      3.       Sapphire       " << endl;
+
                 cout << "\n  Enter the name of the room: ";
                 cin.ignore(); // Added this line to clear the input buffer
                 getline(cin, roomName);
@@ -276,34 +288,36 @@ int main() {
                     if (room->available) {
                         cout << "\n  Room " << room->name << " booked successfully!\n";
                         room->available = false;
-                    } else {
+                    }
+                    else {
                         cout << "\n  Room " << room->name << " is not available at the moment.\n";
                     }
-                } else {
+                }
+                else {
                     cout << "\n  Room not found.\n";
                 }
             }
             else if (choice == "2") {
                 string bookChoice;
-                
-                cout <<"\n   What would you like to do?\n";
-            	cout<<" <--------------------------->"<<endl;
-            	cout<<"     No.        Category      "<<endl;
-            	cout<<" <--------------------------->"<<endl;
-                cout<<"     1.     Search for a book "<<endl;
-                cout<<"     2.     Rent a book or show available books"<<endl;
-                cout<<"\n    Enter your choice: ";
+
+                cout << "\n   What would you like to do?\n";
+                cout << " <--------------------------->" << endl;
+                cout << "     No.        Category      " << endl;
+                cout << " <--------------------------->" << endl;
+                cout << "     1.     Search for a book " << endl;
+                cout << "     2.     Rent a book or show available books" << endl;
+                cout << "\n    Enter your choice: ";
                 cin >> bookChoice;
 
                 if (bookChoice == "1") {
                     string searchChoice;
                     cout << "\n  What field would you like to search by?\n";
-                    cout<<" <--------------------------->"<<endl;
-            		cout<<"     No.        Category      "<<endl;
-            		cout<<" <--------------------------->"<<endl;
-                    cout << "   1.         ID            "<<endl;
-                    cout << "   2.         Title         "<<endl; 
-                    cout << "   3.         ISBN          "<<endl;
+                    cout << " <--------------------------->" << endl;
+                    cout << "     No.        Category      " << endl;
+                    cout << " <--------------------------->" << endl;
+                    cout << "   1.         ID            " << endl;
+                    cout << "   2.         Title         " << endl;
+                    cout << "   3.         ISBN          " << endl;
                     cout << "\n  Enter your choice: ";
                     cin >> searchChoice;
 
@@ -325,37 +339,47 @@ int main() {
                     }
 
                     if (foundBook != nullptr) {
-                        cout << "  Book found! \n";
-                        cout << "  Title: " << foundBook->title << endl;
-                        cout << "  ISBN: " << foundBook->isbn << endl;
-                        cout << "  ID: " << foundBook->id << endl;
-                        cout << "  Quantity: " << foundBook->quantity << endl;
+                        cout << "\n    Book found!\n";
+                        cout << "    Title: " << foundBook->title << endl;
+                        cout << "    ISBN: " << foundBook->isbn << endl;
+                        cout << "    ID: " << foundBook->id << endl;
+                        cout << "    Quantity: " << foundBook->quantity << endl;
+                        if (foundBook->available && foundBook->quantity > 0) {
+                            cout << "    The book is currently available.\n";
+                        }
+                        else {
+                            cout << "    The book is currently unavailable.\n";
+                        }
                     }
                     else {
-                        cout << "  Book not found.\n";
+                        cout << "\n    Book not found.\n";
                     }
                 }
                 else if (bookChoice == "2") {
-                    string id;
-                    cout << "    Enter the ID of the book you want to rent: ";
-                    cin >> id;
-                    bookList.rentBook(id);
-                }
-                else {
-                    cout << "    Invalid choice. Please try again.\n";
+                    string bookID;
+                    cout << "\n  Enter the ID of the book you want to rent: ";
+                    cin.ignore();
+                    getline(cin, bookID);
+                    bookList.rentBook(bookID);
                 }
             }
             else if (choice == "3") {
-                cout << "    Exiting the program...\n";
+                string bookID;
+                cout << "\n  Enter the ID of the book you want to delete: ";
+                cin.ignore();
+                getline(cin, bookID);
+                bookList.deleteBook(bookID);
+            }
+            else if (choice == "4") {
                 break;
             }
             else {
-                cout << "    Invalid choice. Please try again.\n";
+                cout << "\n  Invalid choice! Please enter a valid option.\n";
             }
         }
     }
     else {
-        cout << "    Login failed. Please check your credentials.\n";
+        cout << "\n  Login Failed! Please check your ID and password.\n";
     }
 
     return 0;
