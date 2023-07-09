@@ -15,7 +15,7 @@ int main ()
 	//Assign value of 1st element of arr to a after adding 10 to it
 	a = *ptr + 10;
 	
-	//increment by 2, making it point to the third element of arr. so 10+2 = 11
+	//increment by 2, making it point to the third element of arr. so 10+2 = 12
 	ptr += 2;
 	
 	//Assing value of 3rd element of arr to b after minus 5 from it. 5-3
